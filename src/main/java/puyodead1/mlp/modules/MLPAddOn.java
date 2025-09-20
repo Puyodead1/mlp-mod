@@ -10,6 +10,7 @@ import meteordevelopment.meteorclient.systems.modules.Modules;
 import meteordevelopment.meteorclient.utils.PostInit;
 import meteordevelopment.meteorclient.utils.misc.MeteorStarscript;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ServerInfo;
 import net.minecraft.item.Items;
 import org.meteordev.starscript.value.Value;
 import org.meteordev.starscript.value.ValueMap;
@@ -37,15 +38,6 @@ public class MLPAddOn extends MeteorAddon {
         ss.set("brand", () -> Value.string((mc.getNetworkHandler() != null && mc.getNetworkHandler().getBrand() != null) ? mc.getNetworkHandler().getBrand() : "Unknown"));
         ss.set("day", () -> mc.world != null ? Value.number(Math.round((float) mc.world.getTimeOfDay() / 24000L)) : Value.string("Unknown"));
         ss.set("real_day", () -> mc.world != null ? Value.number(Math.round((float) ((mc.world.getTimeOfDay() / 24000L) / 3) / 24)) : Value.string("Unknown"));
-        ss.set("ticketID", () -> Value.string(getTicketID()));
-    }
-
-    public static String getTicketID(){
-        if (mc == null || mc.getNetworkHandler() == null) return "";
-        String address = MinecraftClient.getInstance().getNetworkHandler().getServerInfo().address;
-        if (!TicketIDGenerator.isValidIPv4WithPort(address)) return "";
-
-        return TicketIDGenerator.generateTicketID(address);
     }
 
     @Override
@@ -67,6 +59,15 @@ public class MLPAddOn extends MeteorAddon {
 
         Hud.get().register(SocialEngineeringHud.INFO);
         Hud.get().register(Watermark.INFO);
+
+
+        MeteorStarscript.ss.set("ticketID", () -> Value.string(getTicketID()));
+    }
+
+    public static String getTicketID() {
+        if (mc == null || mc.getNetworkHandler() == null) return "";
+        ServerInfo serverInfo = MinecraftClient.getInstance().getNetworkHandler().getServerInfo();
+        return TicketIDGenerator.generateTicketID(serverInfo.address);
     }
 
     @Override

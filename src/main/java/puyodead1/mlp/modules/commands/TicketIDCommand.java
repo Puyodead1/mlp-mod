@@ -6,6 +6,7 @@ package puyodead1.mlp.modules.commands;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import meteordevelopment.meteorclient.commands.Command;
+import meteordevelopment.meteorclient.utils.player.ChatUtils;
 import net.minecraft.command.CommandSource;
 import puyodead1.mlp.modules.MLPAddOn;
 
@@ -18,6 +19,7 @@ public class TicketIDCommand extends Command {
     public void build(LiteralArgumentBuilder<CommandSource> literalArgumentBuilder) {
         literalArgumentBuilder.executes(context -> {
             mc.keyboard.setClipboard(MLPAddOn.getTicketID());
+            ChatUtils.info("Copied to clipboard");
             return 1;
         });
     }
